@@ -159,6 +159,7 @@ class CatCodingPanel {
 			null,
 			this._disposables
 		);
+		
 	}
 
 	public doRefactor() {
