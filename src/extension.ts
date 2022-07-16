@@ -1,17 +1,38 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
 
 const cats = {
 	'Coding Cat': 'https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif',
 	'Compiling Cat': 'https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif',
 	'Testing Cat': 'https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif'
 };
-
+let NEXT_TERM_ID = 1;
+const manipulateTerminal = (callback)=>{
+	if (ensureTerminalExists()) {
+		selectTerminal().then(terminal => {
+			if (terminal) {
+				terminal.show();
+				callback(terminal);
+			}
+		});
+	}
+	else{
+		//const terminal = vscode.window.createTerminal(`Ext Terminal #${NEXT_TERM_ID++}`);
+		const terminal = vscode.window.createTerminal(`Ext Terminal`);
+		terminal.show();
+		terminal.sendText("echo 'Sent text immediately after creating'");
+		// terminal.sendText('mvn -version');
+		// terminal.sendText('java -version');
+		callback(terminal);
+	}
+};
 export function activate(context: vscode.ExtensionContext) {
-	let NEXT_TERM_ID = 1;
+	
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand('catCoding.start', () => {
 			CatCodingPanel.createOrShow(context.extensionUri);
+			
 		})
 	);
 
@@ -43,21 +64,10 @@ export function activate(context: vscode.ExtensionContext) {
 		// terminal.sendText("echo 'Sent text immediately after creating'");
 		// terminal.sendText('mvn -version');
 		// terminal.sendText('java -version');
-		
-		if (ensureTerminalExists()) {
-			selectTerminal().then(terminal => {
-				if (terminal) {
-					terminal.show();
-				}
-			});
-		}
-		else{
-			const terminal = vscode.window.createTerminal(`Ext Terminal #${NEXT_TERM_ID++}`);
-			terminal.show();
-			terminal.sendText("echo 'Sent text immediately after creating'");
+		manipulateTerminal((terminal)=>{
 			terminal.sendText('mvn -version');
-			terminal.sendText('java -version');
-		}
+		});
+		
 	}));
 
 	if (vscode.window.registerWebviewPanelSerializer) {
@@ -93,7 +103,9 @@ class CatCodingPanel {
 	public static currentPanel: CatCodingPanel | undefined;
 
 	public static readonly viewType = 'catCoding';
+	//this.file_vscode_harmonystate = vscode.Uri.joinPath(this._extensionUri, 'media','vscode_harmonystate').path;
 
+	public file_vscode_harmonystate;
 	private readonly _panel: vscode.WebviewPanel;
 	private readonly _extensionUri: vscode.Uri;
 	private _disposables: vscode.Disposable[] = [];
@@ -116,7 +128,7 @@ class CatCodingPanel {
 			column || vscode.ViewColumn.One,
 			getWebviewOptions(extensionUri),
 		);
-
+		
 		CatCodingPanel.currentPanel = new CatCodingPanel(panel, extensionUri);
 	}
 
@@ -127,7 +139,7 @@ class CatCodingPanel {
 	private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
 		this._panel = panel;
 		this._extensionUri = extensionUri;
-
+		this.file_vscode_harmonystate = vscode.Uri.joinPath(this._extensionUri, 'media','vscode_harmonystate').path;
 		// Set the webview's initial html content
 		this._update();
 
@@ -145,20 +157,35 @@ class CatCodingPanel {
 			null,
 			this._disposables
 		);
-
+		
+		
 		// Handle messages from the webview
 		this._panel.webview.onDidReceiveMessage(
 			message => {
-				console.log("onDidReceiveMessage message ",message)
+				console.log("onDidReceiveMessage message ",message);
 				switch (message.command) {
 					case 'alert':
 						vscode.window.showErrorMessage(message.text);
-						return;
+						break;
+					case 'localdb':
+						fs.writeFileSync(this.file_vscode_harmonystate,message.text);
+						break;
+					case 'vscodecommand:buildMaven':
+						//manipulateTerminal();
+						manipulateTerminal((terminal)=>{
+							terminal.sendText('mvn -version');
+						});
+						break;
 				}
 			},
 			null,
 			this._disposables
 		);
+		
+		this._panel.webview.postMessage({
+			message:"status",
+			text: "test divine"
+		});
 		
 	}
 
@@ -208,6 +235,13 @@ class CatCodingPanel {
 	}
 
 	private _getHtmlForWebview(webview: vscode.Webview, catGifPath: string) {
+		console.log("in _getHtmlForWebview");
+		if(fs.existsSync(this.file_vscode_harmonystate)){
+			this._panel.webview.postMessage({
+				message:"localdb",
+				text: fs.readFileSync(this.file_vscode_harmonystate).toString()
+			});
+		}
 		// Local path to main script run in the webview
 		const scriptPathOnDisk = vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js');
 
@@ -217,7 +251,7 @@ class CatCodingPanel {
 		// Local path to css styles
 		const styleResetPath = vscode.Uri.joinPath(this._extensionUri, 'media', 'reset.css');
 		const stylesPathMainPath = vscode.Uri.joinPath(this._extensionUri, 'media', 'vscode.css');
-		const stylesCustomUri = vscode.Uri.joinPath(this._extensionUri, 'media', 'custom.css');
+		
 		// Uri to load styles into webview
 		const stylesResetUri = webview.asWebviewUri(styleResetPath);
 		const stylesMainUri = webview.asWebviewUri(stylesPathMainPath);
@@ -240,7 +274,6 @@ class CatCodingPanel {
 
 				<link href="${stylesResetUri}" rel="stylesheet">
 				<link href="${stylesMainUri}" rel="stylesheet">
-				<link href="${stylesCustomUri}" rel="stylesheet">
 				<title>Cat Coding</title>
 				<style>
 					label,button{
@@ -366,9 +399,12 @@ function selectTerminal(): Thenable<vscode.Terminal | undefined> {
 			terminal: t
 		};
 	});
-	return vscode.window.showQuickPick(items).then(item => {
-		return item ? item.terminal : undefined;
+	return  new Promise((res,rej)=>{
+		res(items[0].terminal);
 	});
+	// return vscode.window.showQuickPick(items).then(item => {
+	// 	return item ? item.terminal : undefined;
+	// });
 }
 
 function ensureTerminalExists(): boolean {

@@ -42,6 +42,8 @@ let htmlelements = {
    
   
   console.log("in javascript main.js")
+
+  console.log("47 mvn_application ",document.getElementById("mvn_application").value)
   console.log("vscode ",vscode);
   let getState=(value)=>{
     if(value){
@@ -52,8 +54,34 @@ let htmlelements = {
     }
   }
   let setState=(key,value)=>{
-    vscode.setState({ [key] : value });
+    vscode.setState({ 
+      ...getState(),
+      [key] : value
+     });
   }
+
+  window.addEventListener("message",(event)=>{
+    console.log("window event message ",event.data);
+    if(event.data){
+      if(event.data.message== "localdb"){
+        let textJSON = JSON.parse(event.data.text);
+        console.log(" textJSON ",textJSON)
+        for(let key in textJSON){
+          setState(key,textJSON[key]);
+          document.getElementById(key).value=textJSON[key];
+        }
+      }
+      else if(event.data.message== ""){
+        
+      }
+      else{
+        
+      }
+    }
+
+  });
+
+
   let registerEventListener = (type,eventName,callback)=>{
     document.getElementById(eventName)?.addEventListener(type,callback);
   }
@@ -61,16 +89,25 @@ let htmlelements = {
   //maven listeners start
   registerEventListener("input",htmlelements.mvn.application,function(){
     setState(htmlelements.mvn.application,this.value);
+    vscode.postMessage({
+      command : "localdb",
+      text : JSON.stringify(getState())
+    })
   });
   
   registerEventListener("click",htmlelements.mvn.execute,()=>{
     console.log( ` clicked ${htmlelements.mvn.execute}`)
     console.log("values ",Object.values(htmlelements.mvn));
 
+    // vscode.postMessage({
+    //   command : "enquiry",
+    //   text : "how are you?"
+    // })
     vscode.postMessage({
-      command : "enquiry",
-      text : "how are you?"
+      command : "vscodecommand:buildMaven",
+      text : "mvn -version"
     })
+    
   });
   
 
@@ -85,7 +122,11 @@ let htmlelements = {
   javarun_exclude_execute.forEach(elementId=>{
     registerEventListener("input",elementId,function(){
       setState(elementId,this.value);
-      console.log(elementId,this.value)
+      console.log(" getState() ",getState())
+      vscode.postMessage({
+        command : "localdb",
+        text : JSON.stringify(getState())
+      })
 
     })
   })
