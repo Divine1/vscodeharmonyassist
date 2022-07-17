@@ -32,7 +32,8 @@ let htmlelements = {
     status_execute : "git_status_execute",
     pull_execute : "git_pull_execute",
     commit_execute : "git_commit_execute",
-    push_execute : "git_push_execute"
+    push_execute : "git_push_execute",
+    add_execute : "git_add_execute"
   }
 
 };
@@ -143,10 +144,13 @@ let htmlelements = {
   
   registerEventListener("click",htmlelements.mvn.execute,()=>{
     console.log( ` clicked ${htmlelements.mvn.execute}`)
-    console.log("values ",Object.values(htmlelements.mvn));
+    // console.log("values ",Object.values(htmlelements.mvn));
+    let appname = document.getElementById(htmlelements.mvn.application).value;
+    // mvn clean package -Dappname=vTAPRegression
+
     vscode.postMessage({
       command : "vscodecommand",
-      text : "mvn clean install"
+      text : `mvn clean install -Dappname=${appname}`
     })
     
   });
@@ -182,11 +186,11 @@ let htmlelements = {
     let appname = document.getElementById(htmlelements.javarun.appname).value;
     //xvfb-run -a java -jar target/cbfvTAPRegression.jar -cp target/dependency-jars/
     javaRunParams =`xvfb-run -a java -jar target/cbf${appname}.jar -cp target/dependency-jars/ ${javaRunParams}`
-    
+    //javaRunParams =`java -jar target/cbf${appname}.jar -cp target/dependency-jars/ ${javaRunParams}`
     console.log("javaRunParams ",javaRunParams);
     vscode.postMessage({
       command : "vscodecommand",
-      text : "java -version"
+      text : javaRunParams
     })
 
   })
@@ -197,15 +201,39 @@ let htmlelements = {
 
   registerEventListener("click",htmlelements.git.status_execute,function(){
     console.log( ` clicked ${htmlelements.git.status_execute}`)
+    vscode.postMessage({
+      command : "vscodecommand",
+      text : "git status"
+    })
   })
   registerEventListener("click",htmlelements.git.pull_execute,function(){
     console.log( ` clicked ${htmlelements.git.pull_execute}`)
+    vscode.postMessage({
+      command : "vscodecommand",
+      text : "git pull"
+    })
+  })
+  
+  registerEventListener("click",htmlelements.git.add_execute,function(){
+    console.log( ` clicked ${htmlelements.git.add_execute}`)
+    vscode.postMessage({
+      command : "vscodecommand",
+      text : "git add ."
+    })
   })
   registerEventListener("click",htmlelements.git.commit_execute,function(){
     console.log( ` clicked ${htmlelements.git.commit_execute}`)
+    vscode.postMessage({
+      command : "vscodecommand",
+      text : "git commit -a -m 'updated'"
+    })
   })
   registerEventListener("click",htmlelements.git.push_execute,function(){
     console.log( ` clicked ${htmlelements.git.push_execute}`)
+    vscode.postMessage({
+      command : "vscodecommand",
+      text : "git push"
+    })
   })
 
   //git listeners end

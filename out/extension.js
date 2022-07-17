@@ -325,6 +325,7 @@ class CatCodingPanel {
 					<div>
 						<button id="git_status_execute">Status</button>
 						<button id="git_pull_execute">Pull</button> 
+						<button id="git_add_execute">Add</button>
 						<button id="git_commit_execute">Commit</button>
 						<button id="git_push_execute">Push</button>
 					</div>
@@ -360,7 +361,7 @@ function selectTerminal() {
 }
 function ensureTerminalExists() {
     if (vscode.window.terminals.length === 0) {
-        vscode.window.showErrorMessage('No active terminals');
+        //vscode.window.showErrorMessage('No active terminals');
         return false;
     }
     return true;
