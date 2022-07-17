@@ -235,12 +235,6 @@ class CatCodingPanel {
 					label,button{
 						display:inline-block;
 					}
-					.projectdir{
-						margin: 0.5rem 0;
-					}
-					.projectdir .label{
-						width: 12rem;
-					}
 					label{
 						width: 10rem;
 					}
@@ -256,10 +250,6 @@ class CatCodingPanel {
 			</head>
 			<body>
 				<h2 style="text-align:center">Harmony Assist</h2>
-				<div class="projectdir">
-				<h3 style="display: inline-block;" class="label">Project Directory</h3>
-				<input type="text" id="projectDir" value="" size="60" />(eg: /my/project/path/)
-				</div>
 				<h3>Build</h3>
 				<div class="maven">
 					<div>

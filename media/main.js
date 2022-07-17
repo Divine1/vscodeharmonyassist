@@ -4,9 +4,6 @@
 
 
 let htmlelements = {
-  projectDir : {
-    projectDir : "projectDir"
-  },
   mvn : {
     application : "mvn_application",
     execute : "mvn_execute",
@@ -70,7 +67,6 @@ let htmlelements = {
 
   //set defaultvalues for javaRun start 
   let setDefaultValues = ()=>{
-    document.getElementById(htmlelements.projectDir.projectDir).value="/projects/cbfsel-project/";
     
     document.getElementById(htmlelements.mvn.application).value="vTAPRegression";
     
@@ -134,10 +130,6 @@ let htmlelements = {
   let registerEventListener = (type,eventName,callback)=>{
     document.getElementById(eventName)?.addEventListener(type,callback);
   }
-  registerEventListener("input",htmlelements.projectDir.projectDir,function(){
-    console.log("projectDir event",this.value);
-    setState(htmlelements.projectDir.projectDir,this.value);
-  });
 
 
   //maven listeners start
@@ -188,9 +180,8 @@ let htmlelements = {
     });
     javaRunParams +=" -port 4444 -dockerip localhost";
     let appname = document.getElementById(htmlelements.javarun.appname).value;
-    let projectDir = document.getElementById(htmlelements.projectDir.projectDir).value;
     //xvfb-run -a java -jar target/cbfvTAPRegression.jar -cp target/dependency-jars/
-    javaRunParams =`xvfb-run -a java -jar ${projectDir}target/cbf${appname}.jar -cp ${projectDir}target/dependency-jars/ ${javaRunParams}`
+    javaRunParams =`xvfb-run -a java -jar target/cbf${appname}.jar -cp target/dependency-jars/ ${javaRunParams}`
     
     console.log("javaRunParams ",javaRunParams);
     vscode.postMessage({
