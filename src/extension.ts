@@ -28,7 +28,6 @@ const manipulateTerminal = (callback)=>{
 };
 export function activate(context: vscode.ExtensionContext) {
 	
-
 	context.subscriptions.push(
 		vscode.commands.registerCommand('catCoding.start', () => {
 			CatCodingPanel.createOrShow(context.extensionUri);
@@ -236,12 +235,34 @@ class CatCodingPanel {
 
 	private _getHtmlForWebview(webview: vscode.Webview, catGifPath: string) {
 		console.log("in _getHtmlForWebview");
-		if(fs.existsSync(this.file_vscode_harmonystate)){
-			this._panel.webview.postMessage({
-				message:"localdb",
-				text: fs.readFileSync(this.file_vscode_harmonystate).toString()
-			});
-		}
+		setTimeout(()=>{
+			if(fs.existsSync(this.file_vscode_harmonystate)){
+				console.log("file_vscode_harmonystate exists");
+				const fileData = fs.readFileSync(this.file_vscode_harmonystate);
+				console.log("fileData ",fileData);
+
+				if(fileData && fileData.length >0){
+					console.log("fileData exists");
+					this._panel.webview.postMessage({
+						message:"localdb",
+						text: fileData.toString()
+					});
+				}
+				else{
+					console.log("fileData doesnot exists");
+					this._panel.webview.postMessage({
+						message:"localdbEmpty",
+						text: ""
+					});
+				}
+				
+			}
+			else{
+				console.log("file_vscode_harmonystate doesnot exists");
+				fs.writeFileSync(this.file_vscode_harmonystate,"{}");
+				
+			}
+		},2000);
 		// Local path to main script run in the webview
 		const scriptPathOnDisk = vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js');
 
@@ -279,8 +300,14 @@ class CatCodingPanel {
 					label,button{
 						display:inline-block;
 					}
+					.projectdir{
+						margin: 0.5rem 0;
+					}
+					.projectdir .label{
+						width: 12rem;
+					}
 					label{
-						width: 9rem;
+						width: 10rem;
 					}
 					.maven > div,
 					.run > div{
@@ -294,70 +321,74 @@ class CatCodingPanel {
 			</head>
 			<body>
 				<h2 style="text-align:center">Harmony Assist</h2>
+				<div class="projectdir">
+				<h3 style="display: inline-block;" class="label">Project Directory</h3>
+				<input type="text" id="projectDir" value="" size="60" />
+				</div>
 				<h3>Build</h3>
 				<div class="maven">
 					<div>
 						<label for="">Application</label>
-						<input type="text" id="mvn_application" value="vTAPRegression" size="40">
+						<input type="text" id="mvn_application" value="" size="40">
 						<button id="mvn_execute">Build</button>
 					</div>
 				</div>
 				<h3>Run</h3>
 				<div class="run">
 					<div>
-						<label for="">Application</label><input type="text" id="run_application" value="vTAPRegression" size="40">
+						<label for="">Application</label><input type="text" id="run_appname" value="" size="40">
 					</div>
 					<div>
-						<label for="">Groupinfo</label><input type="text" id="run_groupinfo" value="mdngroup1" size="40">
-					</div>
-					
-					<div>
-						<label for="">Suitename</label><input type="text" id="run_suitename" value="mdngrouprestrictionts" size="40">
-					</div>
-					<div>
-						<label for="">ExecutionParams</label><input type="text" id="run_executionParams" value="codeCoverage:yes" size="40">
-					</div>
-					<div>
-						<label for="">Appid</label><input type="text" id="run_appid" value="827">
-					</div>
-					<div>
-						<label for="">Projectname</label><input type="text" id="run_projectname" value="TAP">
-					</div>
-					<div>
-						<label for="">Queue id</label><input type="text" id="run_queueid" value="13471">
-					</div>
-					<div>
-						<label for="">RunId</label><input type="text" id="run_runid" value="1">
-					</div>
-					<div>
-						<label for="">QueueParam</label><input type="text" id="run_queueparam" value="0">
-					</div>
-					<div>
-						<label for="">Testsuite id</label><input type="text" id="run_testsuiteid" value="51695">
-					</div>
-					<div>
-						<label for="">Browser</label><input type="text" id="run_browser" value="CHROME">
-					</div>
-					<div>
-						<label for="">Environment</label><input type="text" id="run_environment" value="STAGE">
+						<label for="">Groupinfo</label><input type="text" id="run_groupinfo" value="" size="40">
 					</div>
 					
 					<div>
-						<label for="">Autodefect</label><input type="text" id="run_autodefect" value="0">
+						<label for="">Suitename</label><input type="text" id="run_suitename" value="" size="40">
 					</div>
 					<div>
-						<label for="">RunTrials</label><input type="text" id="run_runtrials" value="1">
+						<label for="">ExecutionParams</label><input type="text" id="run_ExecutionParams" value="" size="40">
 					</div>
 					<div>
-						<label for="">SourceId</label><input type="text" id="run_sourceid" value="1">
+						<label for="">Appid</label><input type="text" id="run_appid" value="">
+					</div>
+					<div>
+						<label for="">Projectname</label><input type="text" id="run_projectname" value="">
+					</div>
+					<div>
+						<label for="">Queue id</label><input type="text" id="run_queueid" value="">
+					</div>
+					<div>
+						<label for="">RunId</label><input type="text" id="run_RunId" value="">
+					</div>
+					<div>
+						<label for="">QueueParam</label><input type="text" id="run_QueueParam" value="">
+					</div>
+					<div>
+						<label for="">Testsuite id</label><input type="text" id="run_testsuiteid" value="">
+					</div>
+					<div>
+						<label for="">Browser</label><input type="text" id="run_browser" value="">
+					</div>
+					<div>
+						<label for="">Environment</label><input type="text" id="run_environment" value="">
 					</div>
 					
 					<div>
-						<label for="">security</label><input type="text" id="run_security" value="null">
+						<label for="">Autodefect</label><input type="text" id="run_autodefect" value="">
+					</div>
+					<div>
+						<label for="">RunTrials</label><input type="text" id="run_runTrials" value="">
+					</div>
+					<div>
+						<label for="">SourceId</label><input type="text" id="run_SourceId" value="">
 					</div>
 					
 					<div>
-						<label for="">OutputRunId</label><input type="text" id="run_outputrunid" value="0">
+						<label for="">security</label><input type="text" id="run_security" value="">
+					</div>
+					
+					<div>
+						<label for="">OutputRunId</label><input type="text" id="run_outputRunId" value="">
 					</div>
 					<div>
 						<label for=""></label><button id="run_execute" >Run</button>
