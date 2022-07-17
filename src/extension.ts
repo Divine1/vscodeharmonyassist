@@ -166,26 +166,29 @@ class CatCodingPanel {
 					case 'alert':
 						vscode.window.showErrorMessage(message.text);
 						break;
+					/*
 					case 'localdb':
 						fs.writeFileSync(this.file_vscode_harmonystate,message.text);
 						break;
+					*/
 					case 'vscodecommand:buildMaven':
 						//manipulateTerminal();
 						manipulateTerminal((terminal)=>{
 							terminal.sendText('mvn -version');
 						});
 						break;
+					
 				}
 			},
 			null,
 			this._disposables
 		);
-		
+		/*
 		this._panel.webview.postMessage({
 			message:"status",
 			text: "test divine"
 		});
-		
+		*/
 	}
 
 	public doRefactor() {
@@ -235,7 +238,7 @@ class CatCodingPanel {
 
 	private _getHtmlForWebview(webview: vscode.Webview, catGifPath: string) {
 		console.log("in _getHtmlForWebview");
-		setTimeout(()=>{
+		/*
 			if(fs.existsSync(this.file_vscode_harmonystate)){
 				console.log("file_vscode_harmonystate exists");
 				const fileData = fs.readFileSync(this.file_vscode_harmonystate);
@@ -262,7 +265,7 @@ class CatCodingPanel {
 				fs.writeFileSync(this.file_vscode_harmonystate,"{}");
 				
 			}
-		},2000);
+		*/
 		// Local path to main script run in the webview
 		const scriptPathOnDisk = vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js');
 

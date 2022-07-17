@@ -110,14 +110,7 @@ let htmlelements = {
       }
       else if(event.data.message== "localdbEmpty"){
         setDefaultValues()
-        javarun_exclude_execute.forEach(elementId=>{
-          let value = document.getElementById(elementId).value;
-          setState(elementId,value);
-        });
-        vscode.postMessage({
-          command : "localdb",
-          text : JSON.stringify(getState())
-        });
+        
       }
       else{
         
@@ -135,10 +128,10 @@ let htmlelements = {
   //maven listeners start
   registerEventListener("input",htmlelements.mvn.application,function(){
     setState(htmlelements.mvn.application,this.value);
-    vscode.postMessage({
-      command : "localdb",
-      text : JSON.stringify(getState())
-    })
+    // vscode.postMessage({
+    //   command : "localdb",
+    //   text : JSON.stringify(getState())
+    // })
   });
   
   registerEventListener("click",htmlelements.mvn.execute,()=>{
@@ -159,10 +152,10 @@ let htmlelements = {
     registerEventListener("input",elementId,function(){
       setState(elementId,this.value);
       console.log(" getState() ",getState())
-      vscode.postMessage({
-        command : "localdb",
-        text : JSON.stringify(getState())
-      })
+      // vscode.postMessage({
+      //   command : "localdb",
+      //   text : JSON.stringify(getState())
+      // })
 
     })
   })
@@ -172,9 +165,9 @@ let htmlelements = {
     console.log( ` clicked ${htmlelements.javarun.execute}`)
     console.log("javarun_exclude_execute ",javarun_exclude_execute);
 
-    for(let key in getState()){
-      console.log("key ",key)
-    }
+    // for(let key in getState()){
+    //   console.log("key ",key)
+    // }
 
   })
   
