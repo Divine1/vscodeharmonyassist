@@ -44,6 +44,7 @@ let htmlelements = {
 (function () {
   const vscode = acquireVsCodeApi();
   console.log("in javascript main.js")
+  console.log("vscode.getState() ",vscode.getState())
 
   let javarun_all = Object.values(htmlelements.javarun);
   javarun_all.splice(javarun_all.indexOf(htmlelements.javarun.execute),1);
@@ -69,7 +70,7 @@ let htmlelements = {
 
   //set defaultvalues for javaRun start 
   let setDefaultValues = ()=>{
-    document.getElementById(htmlelements.projectDir.projectDir).value="";
+    document.getElementById(htmlelements.projectDir.projectDir).value="/projects/cbfsel-project/";
     
     document.getElementById(htmlelements.mvn.application).value="vTAPRegression";
     
@@ -90,12 +91,20 @@ let htmlelements = {
     document.getElementById(htmlelements.javarun.sourceid).value="1";
     document.getElementById(htmlelements.javarun.security).value="null";
     document.getElementById(htmlelements.javarun.outputrunid).value="0";
+
+
+    Object.values(htmlelements.javarun).forEach(elementId=>{
+      // console.log("elementId ",elementId);
+      setState(elementId,document.getElementById(elementId).value);
+    })
   }
   //set defaultvalues for javaRun end
 
   
 
   // receive data from vscode core  start
+  setDefaultValues()
+  /*
   window.addEventListener("message",(event)=>{
     console.log("window event message ",event.data);
     if(event.data){
@@ -117,6 +126,7 @@ let htmlelements = {
       }
     }
   });
+  */
   // receive data from vscode core  end
 
 
@@ -124,6 +134,11 @@ let htmlelements = {
   let registerEventListener = (type,eventName,callback)=>{
     document.getElementById(eventName)?.addEventListener(type,callback);
   }
+  registerEventListener("input",htmlelements.projectDir.projectDir,function(){
+    console.log("projectDir event",this.value);
+    setState(htmlelements.projectDir.projectDir,this.value);
+  });
+
 
   //maven listeners start
   registerEventListener("input",htmlelements.mvn.application,function(){
@@ -138,8 +153,8 @@ let htmlelements = {
     console.log( ` clicked ${htmlelements.mvn.execute}`)
     console.log("values ",Object.values(htmlelements.mvn));
     vscode.postMessage({
-      command : "vscodecommand:buildMaven",
-      text : "mvn clean -version"
+      command : "vscodecommand",
+      text : "mvn clean install"
     })
     
   });
@@ -164,10 +179,24 @@ let htmlelements = {
   registerEventListener("click",htmlelements.javarun.execute,function(){
     console.log( ` clicked ${htmlelements.javarun.execute}`)
     console.log("javarun_exclude_execute ",javarun_exclude_execute);
-
-    // for(let key in getState()){
-    //   console.log("key ",key)
-    // }
+    // console.log("getState() ",getState())
+    let javaRunParams="";
+    javarun_exclude_execute.forEach(elementId =>{
+      let elementValue = document.getElementById(elementId).value;
+      let elementId_split = elementId.split("_");
+      javaRunParams += ` -${elementId_split[1]} ${elementValue}`;
+    });
+    javaRunParams +=" -port 4444 -dockerip localhost";
+    let appname = document.getElementById(htmlelements.javarun.appname).value;
+    let projectDir = document.getElementById(htmlelements.projectDir.projectDir).value;
+    //xvfb-run -a java -jar target/cbfvTAPRegression.jar -cp target/dependency-jars/
+    javaRunParams =`xvfb-run -a java -jar ${projectDir}target/cbf${appname}.jar -cp ${projectDir}target/dependency-jars/ ${javaRunParams}`
+    
+    console.log("javaRunParams ",javaRunParams);
+    vscode.postMessage({
+      command : "vscodecommand",
+      text : "java -version"
+    })
 
   })
   

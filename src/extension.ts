@@ -6,8 +6,8 @@ const cats = {
 	'Compiling Cat': 'https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif',
 	'Testing Cat': 'https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif'
 };
-let NEXT_TERM_ID = 1;
-const manipulateTerminal = (callback)=>{
+const NEXT_TERM_ID = 1;
+const manipulateTerminal = (callback: { (terminal: any): void; (terminal: any): void; (arg0: vscode.Terminal): void; })=>{
 	if (ensureTerminalExists()) {
 		selectTerminal().then(terminal => {
 			if (terminal) {
@@ -171,10 +171,10 @@ class CatCodingPanel {
 						fs.writeFileSync(this.file_vscode_harmonystate,message.text);
 						break;
 					*/
-					case 'vscodecommand:buildMaven':
+					case 'vscodecommand':
 						//manipulateTerminal();
 						manipulateTerminal((terminal)=>{
-							terminal.sendText('mvn -version');
+							terminal.sendText(message.text);
 						});
 						break;
 					
@@ -326,7 +326,7 @@ class CatCodingPanel {
 				<h2 style="text-align:center">Harmony Assist</h2>
 				<div class="projectdir">
 				<h3 style="display: inline-block;" class="label">Project Directory</h3>
-				<input type="text" id="projectDir" value="" size="60" />
+				<input type="text" id="projectDir" value="" size="60" />(eg: /my/project/path/)
 				</div>
 				<h3>Build</h3>
 				<div class="maven">
