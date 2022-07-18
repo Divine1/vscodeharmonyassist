@@ -29,22 +29,6 @@
 				"command": "harmonyAssist.open",
 				"title": "Open Harmony Assist plugin",
 				"category": "Harmony Assist"
-			},
-			{
-				"command": "harmonyAssist.doRefactor",
-				"title": "Do some refactoring",
-				"category": "Harmony Assist"
-			},
-			{
-				"command": "harmonyAssist.openTerminal",
-				"title": "Open Terminal",
-				"category": "Harmony Assist"
-			},
-			
-			{
-				"command": "harmonyAssist.createTerminal",
-				"title": "create Terminal",
-				"category": "Cat Coding"
 			}
 		]
 	},
