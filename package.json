@@ -1,8 +1,8 @@
 {
-	"name": "cat-coding",
-	"description": "Cat Coding - A Webview API Sample",
+	"name": "harmony-assist",
+	"description": "Harmony Assist Plugin",
 	"version": "0.0.1",
-	"publisher": "vscode-samples",
+	"publisher": "harmony-cbfsel",
 	"private": true,
 	"license": "MIT",
 	"repository": {
@@ -16,33 +16,33 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:catCoding.start",
-		"onCommand:catCoding.doRefactor",
-		"onWebviewPanel:catCoding",
-		"onCommand:catCoding.openTerminal",
-		"onCommand:catCoding.createTerminal"
+		"onCommand:harmonyAssist.start",
+		"onCommand:harmonyAssist.doRefactor",
+		"onWebviewPanel:harmonyAssist",
+		"onCommand:harmonyAssist.openTerminal",
+		"onCommand:harmonyAssist.createTerminal"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "catCoding.start",
-				"title": "Start cat coding session",
-				"category": "Cat Coding"
+				"command": "harmonyAssist.open",
+				"title": "Open Harmony Assist plugin",
+				"category": "Harmony Assist"
 			},
 			{
-				"command": "catCoding.doRefactor",
+				"command": "harmonyAssist.doRefactor",
 				"title": "Do some refactoring",
-				"category": "Cat Coding"
+				"category": "Harmony Assist"
 			},
 			{
-				"command": "catCoding.openTerminal",
+				"command": "harmonyAssist.openTerminal",
 				"title": "Open Terminal",
-				"category": "Cat Coding"
+				"category": "Harmony Assist"
 			},
 			
 			{
-				"command": "catCoding.createTerminal",
+				"command": "harmonyAssist.createTerminal",
 				"title": "create Terminal",
 				"category": "Cat Coding"
 			}

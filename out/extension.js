@@ -28,20 +28,20 @@ const manipulateTerminal = (callback) => {
     }
 };
 function activate(context) {
-    context.subscriptions.push(vscode.commands.registerCommand('catCoding.start', () => {
+    context.subscriptions.push(vscode.commands.registerCommand('harmonyAssist.open', () => {
         CatCodingPanel.createOrShow(context.extensionUri);
     }));
-    context.subscriptions.push(vscode.commands.registerCommand('catCoding.doRefactor', () => {
+    context.subscriptions.push(vscode.commands.registerCommand('harmonyAssist.doRefactor', () => {
         if (CatCodingPanel.currentPanel) {
             CatCodingPanel.currentPanel.doRefactor();
         }
     }));
     //workbench.action.terminal.openNativeConsole
-    context.subscriptions.push(vscode.commands.registerCommand('catCoding.openTerminal', () => {
+    context.subscriptions.push(vscode.commands.registerCommand('harmonyAssist.openTerminal', () => {
         vscode.commands.executeCommand("workbench.action.terminal.new");
     }));
     // vscode.window.createTerminal
-    context.subscriptions.push(vscode.commands.registerCommand('catCoding.createTerminal', () => {
+    context.subscriptions.push(vscode.commands.registerCommand('harmonyAssist.createTerminal', () => {
         // vscode.window.createTerminal(`Ext Terminal #${NEXT_TERM_ID++}`);
         // vscode.window.showInformationMessage('Hello World 2!');
         // const terminal = vscode.window.createTerminal(`Ext Terminal #${NEXT_TERM_ID++}`);
@@ -75,7 +75,7 @@ function getWebviewOptions(extensionUri) {
     };
 }
 /**
- * Manages cat coding webview panels
+ * Manages HarmonyAssist webview panels
  */
 class CatCodingPanel {
     constructor(panel, extensionUri) {
@@ -131,7 +131,7 @@ class CatCodingPanel {
             return;
         }
         // Otherwise, create a new panel.
-        const panel = vscode.window.createWebviewPanel(CatCodingPanel.viewType, 'Cat Coding', column || vscode.ViewColumn.One, getWebviewOptions(extensionUri));
+        const panel = vscode.window.createWebviewPanel(CatCodingPanel.viewType, 'Harmony Assist', column || vscode.ViewColumn.One, getWebviewOptions(extensionUri));
         CatCodingPanel.currentPanel = new CatCodingPanel(panel, extensionUri);
     }
     static revive(panel, extensionUri) {
@@ -230,7 +230,7 @@ class CatCodingPanel {
 
 				<link href="${stylesResetUri}" rel="stylesheet">
 				<link href="${stylesMainUri}" rel="stylesheet">
-				<title>Cat Coding</title>
+				<title>Harmony Assist</title>
 				<style>
 					label,button{
 						display:inline-block;
@@ -335,7 +335,7 @@ class CatCodingPanel {
 			</html>`;
     }
 }
-CatCodingPanel.viewType = 'catCoding';
+CatCodingPanel.viewType = 'harmonyAssist';
 function getNonce() {
     let text = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

@@ -239,7 +239,7 @@ class CatCodingPanel {
 				<link href="${stylesResetUri}" rel="stylesheet">
 				<link href="${stylesMainUri}" rel="stylesheet">
 
-				<title>Cat Coding</title>
+				<title>Harmony Assist</title>
 			</head>
 			<body>
 				<h1>Hey cat</h1>
