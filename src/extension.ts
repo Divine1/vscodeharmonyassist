@@ -4,7 +4,8 @@ import * as fs from 'fs';
 const cats = {
 	'Coding Cat': 'https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif',
 	'Compiling Cat': 'https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif',
-	'Testing Cat': 'https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif'
+	'Testing Cat': 'https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif',
+	'Harmony Assist': 'https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif'
 };
 const NEXT_TERM_ID = 1;
 const manipulateTerminal = (callback: { (terminal: any): void; (terminal: any): void; (arg0: vscode.Terminal): void; })=>{
@@ -226,7 +227,7 @@ class CatCodingPanel {
 
 			case vscode.ViewColumn.One:
 			default:
-				this._updateForCat(webview, 'Coding Cat');
+				this._updateForCat(webview, 'Harmony Assist');
 				return;
 		}
 	}

@@ -16,7 +16,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:harmonyAssist.start",
+		"onCommand:harmonyAssist.open",
 		"onCommand:harmonyAssist.doRefactor",
 		"onWebviewPanel:harmonyAssist",
 		"onCommand:harmonyAssist.openTerminal",
